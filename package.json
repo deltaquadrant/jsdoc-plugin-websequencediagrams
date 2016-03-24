@@ -1,0 +1,19 @@
+{
+  "name": "jsdoc-plugin-websequencediagrams",
+  "version": "1.0.0",
+  "description": "Plugin to generate sequence diagrams from comment text",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": "https://github.com/deltaquadrant/jsdoc-plugin-websequencediagrams",
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "deasync": "^0.1.4",
+    "websequencediagrams": "0.0.2"
+  },
+  "devDependencies": {
+    "jsdoc": "^3.4.0"
+  }
+}
