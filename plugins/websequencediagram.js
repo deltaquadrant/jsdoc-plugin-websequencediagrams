@@ -19,6 +19,8 @@ var wsd = null;
  *
  * @type {Object}
  */
+var sequenceInflight = 0;
+
 exports.handlers = {
   newDoclet: function(e) {
       var idx, endIdx, descBody, seqBody;
@@ -29,23 +31,28 @@ exports.handlers = {
           if (endIdx < 0) endIdx = descBody.length;
           seqBody = descBody.substring(idx + TAG.length, endIdx);
           if (!wsd) wsd = require('websequencediagrams');
-          var diagDone;
+          sequenceInflight++;
+          // TODO: cache sequences already processed
           wsd.diagram(seqBody, "modern-blue", "png", function(err, buf, typ) {
               if (err) {
+                  console.log(seqBody);
                   console.error(err);
               } else {
                   e.doclet.description = descBody.substring(0, idx) +
                     '<img src="data:' + typ + ';base64,' +
                     buf.toString("base64") +
                     '"/>' +
-                    descBody.substring(endIdx, descBody.length);
+                    descBody.substring(endIdx + TAG.length, descBody.length);
               }
-              diagDone = true;
+              sequenceInflight--;
           });
-          // TODO: Is there a better way to to synchronize in JSdoc plugins?
-          while (diagDone === undefined) {
-            require('deasync').sleep(100);
-          }
       }
+  },
+
+  processingComplete : function(e) {
+    if (sequenceInflight > 0) {
+      // TODO: Is there a better way to to synchronize in JSdoc plugins?
+      require('deasync').loopWhile(function(){ return sequenceInflight > 0; });
+    }
   }
 };
