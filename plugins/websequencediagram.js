@@ -4,10 +4,8 @@
  */
 'use strict';
 
-var sync = require('synchronize');
 var TAG = "{sequence}";
 var wsd = null;
-
 
 /**
  * JsDoc Handler implementation
